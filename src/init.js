@@ -1,34 +1,57 @@
-import fs from 'fs';
 import childProcess from 'child_process';
-import request from 'request';
+import request from 'request-promise';
 import path from 'path';
-import targz from 'tar.gz';
+import targz from 'targz'
+import fs from 'fs-extra'
 
 import { clearDirectory } from './helpers';
 
 import { DOXITYRC_FILE } from './constants';
 
 export default function (args) {
+ 
   const { source, target } = args;
-  // TODO check folder exists...
+
   const absoluteTarget = `${process.env.PWD}/${target}`;
+  const tarFilePath = `${process.env.PWD}/tarFile.tar.gz`;
   const tmpTarget = path.resolve(`${process.env.PWD}/${target}/../doxity-tmp-${new Date()}`);
+
   // clear the target dir
   clearDirectory(absoluteTarget)
   .then(() => {
-    // clone the repo
-    process.stdout.write(`Getting ${source}...\n`);
-    // pipe package to thingy.
+
     return new Promise((resolve) => {
-      request.get(source)
-      .pipe(targz().createWriteStream(tmpTarget))
-      .on('finish', resolve);
+      // download the tar
+      let ws = fs.createWriteStream(tarFilePath)
+
+      ws.on('open', function() {
+        request(source).pipe(ws)
+      });
+
+      ws.on('finish', function(){
+        targz.decompress({
+          src: tarFilePath,
+          dest: tmpTarget
+        }, function(err){
+            if(err) {
+                console.log(err);
+            } else {
+                // delete the tar file
+                fs.remove(tarFilePath)
+                  .then(() => {
+                    resolve()
+                  })
+            }
+        });
+      })
     });
   })
+
+
   // rename the downloaded folder to doxity
   .then(() => {
     fs.renameSync(`${tmpTarget}/${fs.readdirSync(tmpTarget)[0]}`, absoluteTarget);
-    fs.rmdirSync(tmpTarget);
+    return fs.remove(tmpTarget)
   })
   .then(() => {
     // fancy spinner
@@ -56,5 +79,5 @@ export default function (args) {
       process.stdout.write('Doxity is initialized! Now run `doxity build`\n');
       process.exit();
     });
-  });
+  })
 }
