@@ -29,7 +29,6 @@ export default function (args) {
       });
 
       ws.on('finish', function(){
-        console.log('finished writing tar file')
         targz.decompress({
           src: tarFilePath,
           dest: tmpTarget
