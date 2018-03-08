@@ -1,6 +1,6 @@
 {
-  "name": "@digix/doxity",
-  "version": "0.5.0",
+  "name": "@starinje/doxity",
+  "version": "0.5.14",
   "description": "Documentation Generator for Solidity Contracts",
   "main": "lib/index.js",
   "scripts": {
