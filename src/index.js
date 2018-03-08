@@ -2,25 +2,16 @@ import fs from 'fs';
 
 import {
   DOXITYRC_FILE,
-  // DEFAULT_SOURCE,
   DEFAULT_TARGET,
-  // DEFAULT_PAGES_DIR,
   DEFAULT_SRC_DIR,
-  // DEFAULT_PUBLISH_DIR,
 } from './constants';
 
 import init from './init';
 import compile from './compile';
-// import develop from './develop';
-// import publish from './publish';
-// import build from './build';
 
 const methods = {
   compile,
   init,
-  // develop,
-  // publish,
-  // build,
 };
 
 function populateArguments(passed) {
@@ -30,10 +21,8 @@ function populateArguments(passed) {
   const defaults = {
     target: DEFAULT_TARGET,
     src: DEFAULT_SRC_DIR,
-    // dir: DEFAULT_PAGES_DIR,
-    // source: DEFAULT_SOURCE,
-    // out: DEFAULT_PUBLISH_DIR,
   };
+
   // merge with .doxityrc
   let saved = {};
   try {

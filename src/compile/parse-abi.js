@@ -1,7 +1,23 @@
 import { getFunctionSignature } from '../helpers';
 
-export default function (contract) {
+export default function (contract, source) {
+
+  console.log('in parse-abi')
+
+  function determineFileLineNumber(method, source){
+
+    // code here to determine fileLineNumber
+    // split source by newline into array of strings
+    // look for first match in array and return index of match 
+    console.log('in determineFileLineNumber...')
+    console.log(`source: ${source}`)
+    let fileLineNumber = '8'
+
+    return fileLineNumber
+  }
+
   return contract.abi.map((method) => {
+  
     // get find relevent docs
     const inputParams = method.inputs || [];
     const signature = method.name && `${method.name}(${inputParams.map(i => i.type).join(',')})`;
@@ -26,10 +42,13 @@ export default function (contract) {
     }
     // END HACK
 
+    const fileLineNumber = determineFileLineNumber(method, source)
+
     return {
       ...method,
       ...devDocs,
       ...userDocs,
+      fileLineNumber,
       inputs,
       outputs,
       signature,

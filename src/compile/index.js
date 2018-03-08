@@ -7,9 +7,7 @@ import tomlify from 'tomlify-j0.4';
 import solc from './solc';
 import parseAbi from './parse-abi';
 
-import { CONFIG_FILE, README_FILE, README_TARGET, DOXITYRC_FILE } from '../constants';
-
-function compile({ whitelist, contracts, output, target, version }) {
+function compile({ contracts, output }) {
 
   process.stdout.write(`Generating output for ${Object.keys(contracts).length} contracts...\n`);
   Object.keys(contracts).forEach((contractName) => {
@@ -18,6 +16,7 @@ function compile({ whitelist, contracts, output, target, version }) {
     const { fileName } = contract;
     const { bin, opcodes, abi, devdoc } = contract;
     const { author, title } = devdoc;
+
     const data = {
       author,
       title,
@@ -27,65 +26,16 @@ function compile({ whitelist, contracts, output, target, version }) {
       bin: bin,
       opcodes: opcodes,
       source: fs.readFileSync(fileName).toString(),
-      abiDocs: parseAbi(contract),
+      abiDocs: parseAbi(contract, fs.readFileSync(fileName).toString()),
     };
     return fs.writeFileSync(`${output}/${contractName}.json`, `${JSON.stringify(data)}\n`);
   });
 
-
-  // let pkgConfig = {};
-  // try {
-  //   pkgConfig = JSON.parse(fs.readFileSync(`${process.env.PWD}/package.json`));
-  // } catch (e) {
-  //   console.log('package.json not found, add one for more output');
-  // }
-
-  // let config = {
-  //   compiler: version,
-  //   name: pkgConfig.name,
-  //   license: pkgConfig.license,
-  //   version: pkgConfig.version,
-  //   description: pkgConfig.description,
-  //   homepage: pkgConfig.homepage,
-  //   interaction: {}, // TODO implement
-  //   author: (pkgConfig.author && pkgConfig.author.name) || pkgConfig.author,
-  //   buildTime: new Date(),
-  // };
-
-  // const configFile = `${process.env.PWD}/${target}/${CONFIG_FILE}`;
-
-  // try { // try marginging with old config
-  //   config = { ...toml.parse(fs.readFileSync(configFile).toString()), ...config };
-  // } catch (e) {
-  //   /* do nothing */
-  //   // console.log('Error copying config');
-  // }
-
-  // try { // try marginging with doxity config
-  //   config = { ...config, ...JSON.parse(fs.readFileSync(`${process.env.PWD}/${DOXITYRC_FILE}`).toString()) };
-  // } catch (e) { /* do nothing */ }
-
-  // // write the config
-  // if (fs.existsSync(configFile)) { fs.unlinkSync(configFile); }
-  // fs.writeFileSync(configFile, `${tomlify(config)}`);
-
-  // // copy the readme
-  // try {
-  //   const readmeFile = glob.sync(`${process.env.PWD}/${README_FILE}`, { nocase: true })[0];
-  //   const readmeTarget = `${process.env.PWD}/${target}/${README_TARGET}`;
-  //   if (fs.existsSync(readmeTarget)) { fs.unlinkSync(readmeTarget); }
-  //   fs.writeFileSync(readmeTarget, fs.readFileSync(readmeFile));
-  // } catch (e) {
-  //   /* do nothing */
-  //   // console.log('Readme file not found, ignoring...');
-  // }
   process.stdout.write('  done!\n');
 }
 
 export default function (opts) {
-  const output = `${process.env.PWD}/${opts.target}/${opts.dir}`;
-
-  console.log(`output: ${output}`)
+  const output = `${process.env.PWD}/${opts.target}`;
 
   if (!fs.existsSync(output)) { throw new Error(`Output directory ${output} not found, are you in the right directory?`); }
   // clear out the output folder (remove all json files)

@@ -20,9 +20,9 @@ compile    Compile solidity contracts to generate docs data
 
 Parameters:
 
---target   Gatsby project source files directory
 --src      Folder that contains the contracts you want to compile
---dir      Folder in project to dump contract data
+--target   Folder in project to dump contract data
+
   `);
   process.exit();
 } else {
