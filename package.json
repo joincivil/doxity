@@ -1,6 +1,6 @@
 {
   "name": "@starinje/doxity",
-  "version": "0.5.25",
+  "version": "0.5.48",
   "description": "Documentation Generator for Solidity Contracts",
   "main": "lib/index.js",
   "scripts": {
@@ -36,13 +36,6 @@
     "glob": "^7.1.1",
     "keccakjs": "^0.2.1",
     "minimist": "^1.2.0",
-    "mkdirp": "^0.5.1",
-    "request": "^2.79.0",
-    "rimraf": "^2.5.4",
-    "request-promise": "^4.2.2",
-    "targz": "^1.0.1",
-    "toml": "^2.3.0",
-    "tomlify-j0.4": "^1.0.1",
     "truffle-compile": "git://github.com/digixglobal/truffle-compile.git#f2cef1520aafeb82c9e87c2c75314281b4ca549b",
     "truffle-config": "0.0.7",
     "truffle-resolver": "^3.0.0"

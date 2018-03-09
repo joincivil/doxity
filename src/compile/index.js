@@ -2,8 +2,6 @@
 
 import fs from 'fs';
 import glob from 'glob';
-import toml from 'toml';
-import tomlify from 'tomlify-j0.4';
 import solc from './solc';
 import parseAbi from './parse-abi';
 
@@ -26,7 +24,7 @@ function compile({ contracts, output }) {
       bin: bin,
       opcodes: opcodes,
       source: fs.readFileSync(fileName).toString(),
-      abiDocs: parseAbi(contract, fs.readFileSync(fileName).toString()),
+      abiDocs: parseAbi(contract, contractName, fs.readFileSync(fileName).toString()),
     };
     return fs.writeFileSync(`${output}/${contractName}.json`, `${JSON.stringify(data)}\n`);
   });

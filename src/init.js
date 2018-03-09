@@ -1,10 +1,6 @@
 import childProcess from 'child_process';
-import request from 'request-promise';
 import path from 'path';
-import targz from 'targz'
 import fs from 'fs-extra'
-
-import { clearDirectory } from './helpers';
 
 import { DOXITYRC_FILE, DEFAULT_TARGET } from './constants';
 

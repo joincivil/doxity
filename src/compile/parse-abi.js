@@ -1,19 +1,37 @@
 import { getFunctionSignature } from '../helpers';
 
-export default function (contract, source) {
-
-  console.log('in parse-abi')
+export default function (contract, contractName, source) {
 
   function determineFileLineNumber(method, source){
 
-    // code here to determine fileLineNumber
-    // split source by newline into array of strings
-    // look for first match in array and return index of match 
-    console.log('in determineFileLineNumber...')
-    console.log(`source: ${source}`)
-    let fileLineNumber = '8'
+    if (method.type == 'fallback'){
+      return null
+    } 
 
-    return fileLineNumber
+    const sourceByLineArray = source.split("\n")
+    let lineNumber = null
+    let lineNumberFound = false
+    let constructorFoundCount = 0
+
+    sourceByLineArray.forEach((line, index) => {
+      if(method.type == 'constructor'){
+        
+        if (line.includes(contractName)){
+          constructorFoundCount = constructorFoundCount + 1
+        }   
+        if (constructorFoundCount > 1 && !lineNumberFound){
+          lineNumber = index + 1
+          lineNumberFound = true
+        }
+      } else if (method.type == 'function' || method.type == 'event') {
+          if (line.includes(method.name) && !lineNumberFound){
+            lineNumber = index + 1
+            lineNumberFound = true
+          }
+      } 
+    })
+
+    return (lineNumber ? lineNumber.toString() : lineNumber)
   }
 
   return contract.abi.map((method) => {
