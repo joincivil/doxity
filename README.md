@@ -21,6 +21,6 @@ npm install --save-dev @0xproject/doxity
 ## Quickstart
 
 1. Have a project that contains natspecced* `.sol` contracts in a `contracts` directory, a `package.json` and `README.md`.
-1. `doxity init` will create a '/doxity directory where contract JSON metadata will be saved
+1. `doxity init` will create a `/doxity directory` where contract JSON metadata will be saved
 1. `doxity compile` will generate contract JSON metadata to `./doxity`
 
