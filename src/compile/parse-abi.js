@@ -1,38 +1,50 @@
 import { getFunctionSignature } from '../helpers';
+import _ from 'lodash'
+
+const FALLBACK = 'fallback'
+const CONSTRUCTOR = 'constructor'
+const FUNCTION = 'function'
+const EVENT = 'event'
+
+
+function determineFileLineNumberIfExists(method, contractName, source, inputs, outputs){
+
+  if (method.type == FALLBACK){
+    return undefined
+  } 
+
+  const sourceByLineArray = source.split("\n")
+  let lineNumber = undefined
+
+  sourceByLineArray.forEach((line, index) => {
+    let isEventDeclaration
+    let isMethodDeclaration
+    let isPropertyDeclaration
+    let isConstructorDeclaration
+
+    switch(method.type) {
+      case EVENT:
+        isEventDeclaration = line.includes(`event ${method.name}(`)
+        break;
+      case FUNCTION:
+        isMethodDeclaration = line.includes(`function ${method.name}(`) 
+        isPropertyDeclaration = line.includes(`public ${method.name}`)
+        break
+      case CONSTRUCTOR:
+        isConstructorDeclaration = line.includes(`function ${contractName}(`)
+        break
+    }
+
+    if (isEventDeclaration || isMethodDeclaration || isPropertyDeclaration || isConstructorDeclaration){
+      lineNumber = index + 1
+    }
+  })
+
+  return lineNumber
+
+}
 
 export default function (contract, contractName, source) {
-
-  function determineFileLineNumber(method, source){
-
-    if (method.type == 'fallback'){
-      return null
-    } 
-
-    const sourceByLineArray = source.split("\n")
-    let lineNumber = null
-    let lineNumberFound = false
-    let constructorFoundCount = 0
-
-    sourceByLineArray.forEach((line, index) => {
-      if(method.type == 'constructor'){
-        
-        if (line.includes(contractName)){
-          constructorFoundCount = constructorFoundCount + 1
-        }   
-        if (constructorFoundCount > 1 && !lineNumberFound){
-          lineNumber = index + 1
-          lineNumberFound = true
-        }
-      } else if (method.type == 'function' || method.type == 'event') {
-          if (line.includes(method.name) && !lineNumberFound){
-            lineNumber = index + 1
-            lineNumberFound = true
-          }
-      } 
-    })
-
-    return (lineNumber ? lineNumber.toString() : lineNumber)
-  }
 
   return contract.abi.map((method) => {
   
@@ -60,7 +72,7 @@ export default function (contract, contractName, source) {
     }
     // END HACK
 
-    const fileLineNumber = determineFileLineNumber(method, source)
+    const fileLineNumber = determineFileLineNumberIfExists(method, contractName, source, inputs, outputs)
 
     return {
       ...method,

@@ -8,14 +8,16 @@ export default function (args) {
  
   const { target } = args;
 
-  const doxityrcFile = `${process.env.PWD}/${DOXITYRC_FILE}`;
+  const ROOT_DIR = process.env.PWD
+
+  const doxityrcFile = `${ROOT_DIR}/${DOXITYRC_FILE}`;
 
   // overwrite doxityrc file
-  if (fs.existsSync(doxityrcFile)) { fs.unlinkSync(doxityrcFile); }
+  
   fs.writeFileSync(doxityrcFile, `${JSON.stringify(args, null, 2)}\n`);
 
   // code here to create doxity folder where the contract JSON is deposited
-  const  doxityDir = `${process.env.PWD}/${target}`;
+  const  doxityDir = `${ROOT_DIR}/${target}`;
   if (!fs.existsSync(doxityDir)) {
       fs.mkdirSync(doxityDir);
   }
@@ -24,3 +26,5 @@ export default function (args) {
   process.exit();
 
 }
+
+

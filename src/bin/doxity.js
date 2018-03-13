@@ -21,7 +21,7 @@ compile    Compile solidity contracts to generate docs data
 Parameters:
 
 --src      Folder that contains the contracts you want to compile
---target   Folder in project to dump contract data
+--target   Folder in project to save contract metadata JSON file
 
   `);
   process.exit();
