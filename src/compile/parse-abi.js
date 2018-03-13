@@ -1,5 +1,4 @@
 import { getFunctionSignature } from '../helpers';
-import _ from 'lodash'
 
 const FALLBACK = 'fallback'
 const CONSTRUCTOR = 'constructor'
@@ -7,7 +6,7 @@ const FUNCTION = 'function'
 const EVENT = 'event'
 
 
-function determineFileLineNumberIfExists(method, contractName, source, inputs, outputs){
+function determineFileLineNumberIfExists(method, contractName, source){
 
   if (method.type == FALLBACK){
     return undefined
@@ -72,7 +71,7 @@ export default function (contract, contractName, source) {
     }
     // END HACK
 
-    const fileLineNumber = determineFileLineNumberIfExists(method, contractName, source, inputs, outputs)
+    const fileLineNumber = determineFileLineNumberIfExists(method, contractName, source)
 
     return {
       ...method,
