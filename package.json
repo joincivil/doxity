@@ -1,6 +1,6 @@
 {
-  "name": "@starinje/doxity",
-  "version": "0.5.73",
+  "name": "@0xproject/doxity",
+  "version": "0.0.1",
   "description": "Documentation Generator for Solidity Contracts",
   "main": "lib/index.js",
   "scripts": {
@@ -8,9 +8,7 @@
     "test": "./node_modules/.bin/mocha --compilers js:babel-register",
     "compile": "rm -rf lib/* && ./node_modules/.bin/babel src -d lib && chmod +x ./lib/bin/doxity.js",
     "prepublish": "npm run compile"
-
   },
-
   "bin": {
     "doxity": "./lib/bin/doxity.js"
   },

@@ -32,6 +32,8 @@ function determineFileLineNumberIfExists(method, contractName, source){
       case CONSTRUCTOR:
         isConstructorDeclaration = line.includes(`function ${contractName}(`)
         break
+      default:
+        process.stdout.write(`method type "${method.type}" is not supported`);
     }
 
     if (isEventDeclaration || isMethodDeclaration || isPropertyDeclaration || isConstructorDeclaration){
