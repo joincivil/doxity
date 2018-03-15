@@ -9,7 +9,7 @@
 
 You can install `@0xproject/doxity` globally or locally in your project.
 
-You'll also need `solc 0.4.X` until solc-js is supported (https://github.com/ethereum/solc-js/issues/70)) (http://solidity.readthedocs.io/en/develop/installing-solidity.html) and libssl-dev installed on your machine.
+You'll also need `solc 0.4.X` until solc-js is supported (https://github.com/ethereum/solc-js/issues/70)- http://solidity.readthedocs.io/en/develop/installing-solidity.html - and libssl-dev installed on your machine.
 
 ```bash
 # globally
