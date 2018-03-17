@@ -1,7 +1,54 @@
 import { getFunctionSignature } from '../helpers';
 
-export default function (contract) {
+const FALLBACK = 'fallback'
+const CONSTRUCTOR = 'constructor'
+const FUNCTION = 'function'
+const EVENT = 'event'
+
+
+function determineFileLineNumberIfExists(method, contractName, source){
+
+  if (method.type == FALLBACK){
+    return undefined
+  } 
+
+  const sourceByLineArray = source.split("\n")
+  let lineNumber = undefined
+
+  sourceByLineArray.forEach((line, index) => {
+    let isEventDeclaration
+    let isMethodDeclaration
+    let isPropertyDeclaration
+    let isConstructorDeclaration
+
+    switch(method.type) {
+      case EVENT:
+        isEventDeclaration = line.includes(`event ${method.name}(`)
+        break;
+      case FUNCTION:
+        isMethodDeclaration = line.includes(`function ${method.name}(`) 
+        isPropertyDeclaration = line.includes(`public ${method.name}`)
+        break
+      case CONSTRUCTOR:
+        isConstructorDeclaration = line.includes(`function ${contractName}(`)
+        break
+      default:
+        process.stdout.write(`method type "${method.type}" is not supported`);
+    }
+
+    if (isEventDeclaration || isMethodDeclaration || isPropertyDeclaration || isConstructorDeclaration){
+      lineNumber = index + 1
+    }
+  })
+
+  return lineNumber
+
+}
+
+export default function (contract, contractName, source) {
+
   return contract.abi.map((method) => {
+  
     // get find relevent docs
     const inputParams = method.inputs || [];
     const signature = method.name && `${method.name}(${inputParams.map(i => i.type).join(',')})`;
@@ -26,10 +73,13 @@ export default function (contract) {
     }
     // END HACK
 
+    const fileLineNumber = determineFileLineNumberIfExists(method, contractName, source)
+
     return {
       ...method,
       ...devDocs,
       ...userDocs,
+      fileLineNumber,
       inputs,
       outputs,
       signature,

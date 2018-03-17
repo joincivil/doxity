@@ -1,32 +1,12 @@
 import fs from 'fs';
 import childProcess from 'child_process';
-import Config from 'truffle-config';
-import Resolver from 'truffle-resolver';
-import compile from 'truffle-compile';
+// import Config from 'truffle-config';
+// import Resolver from 'truffle-resolver';
+// import compile from 'truffle-compile';
 
 export default function (src) {
   // detect if we're in a truffle project
   return new Promise((resolve) => {
-    if (fs.existsSync(`${process.env.PWD}/truffle.js`)) {
-      const config = Config.default();
-      config.resolver = new Resolver(config);
-      config.rawData = true;
-      compile.all(config, (err, res) => {
-        if (err) { throw err; }
-        resolve({
-          contracts: Object.keys(res).reduce((o, k) => {
-            const { metadata, ...rest } = res[k].rawData;
-            const { output, settings } = JSON.parse(metadata);
-            const fN = Object.keys(settings.compilationTarget)[0];
-            const fileName = fN.indexOf(process.env.PWD) === 0 ? fN : `${process.env.PWD}/node_modules/${fN}`;
-            return {
-              ...o,
-              [k]: { ...rest, ...output, fileName },
-            };
-          }, {}),
-        });
-      });
-    } else {
       const exec = `solc --combined-json abi,asm,ast,bin,bin-runtime,clone-bin,devdoc,interface,opcodes,srcmap,srcmap-runtime,userdoc ${src}`;
       const res = JSON.parse(childProcess.execSync(exec));
       resolve({
@@ -48,6 +28,5 @@ export default function (src) {
           };
         }, {}),
       });
-    }
-  });
+  })
 }
