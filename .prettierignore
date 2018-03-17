@@ -1,0 +1,4 @@
+lib
+.nyc_output
+package.json
+node_modules
