@@ -1,5 +1,5 @@
 {
-  "name": "@0xproject/doxity",
+  "name": "@joincivil/doxity",
   "version": "0.0.1",
   "description": "Documentation Generator for Solidity Contracts",
   "main": "lib/index.js",
@@ -14,9 +14,9 @@
   "author": "Chris Hitchcott <hitchcott@gmail.com> (http://hitchcott.com)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DigixGlobal/doxidity.git"
+    "url": "https://github.com/joincivil/doxidity.git"
   },
-  "homepage": "https://github.com/DigixGlobal/doxidity",
+  "homepage": "https://github.com/joincivil/doxidity",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-es2015": "^6.16.0",
